@@ -1,6 +1,6 @@
 import 'package:axel/core/routes/app_routes.dart';
 import 'package:axel/features/Auth/bloc/auth_bloc.dart';
-import 'package:axel/features/app/bloc/app_bloc.dart';
+import 'package:axel/features/Todo/bloc/todo_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -42,7 +42,7 @@ class _LoginPageState extends State<LoginPage> {
         child: BlocListener<AuthBloc, AuthState>(
           listener: (context, state) {
             if (state is AuthSuccess) {
-              context.read<AppBloc>().add(UserChanged(_usernameCtrl.text));
+              context.read<TodoBloc>().add(LoadTodos(refresh: true));
               Navigator.pushReplacementNamed(context, AppRoutes.home);
             } else if (state is AuthFailure) {
               ScaffoldMessenger.of(

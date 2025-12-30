@@ -124,8 +124,8 @@ class _RegisterPageState extends State<RegisterPage> {
                     onTap: _pickImage,
                     child: CircleAvatar(
                       radius: 48,
-                      backgroundColor: theme.colorScheme.primary.withOpacity(
-                        0.1,
+                      backgroundColor: theme.colorScheme.primary.withValues(
+                        alpha: 0.1,
                       ),
                       backgroundImage: imagePath != null
                           ? FileImage(File(imagePath!))

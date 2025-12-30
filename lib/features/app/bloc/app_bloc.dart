@@ -17,16 +17,6 @@ class AppBloc extends Bloc<AppEvent, AppState> {
     on<AppStarted>(_onAppStarted);
     on<ToggleTheme>(_onToggleTheme);
     on<LogoutRequested>(_onLogout);
-
-    on<UserChanged>((event, emit) {
-      debugPrint('🟢 AppBloc UserChanged → ${event.userId}');
-
-      emit(ActiveUserChanged(event.userId));
-    });
-
-    on<CacheCleared>((event, emit) async {
-      emit(CacheClearedState());
-    });
   }
 
   Future<void> _onAppStarted(AppStarted event, Emitter<AppState> emit) async {

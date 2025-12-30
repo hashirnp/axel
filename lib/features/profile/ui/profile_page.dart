@@ -163,7 +163,7 @@ class _ProfilePageState extends State<ProfilePage> {
                           child: CircleAvatar(
                             radius: 48,
                             backgroundColor: theme.colorScheme.primary
-                                .withOpacity(0.1),
+                                .withValues(alpha: 0.1),
                             backgroundImage: _imagePath != null
                                 ? FileImage(File(_imagePath!))
                                 : null,

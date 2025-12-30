@@ -55,6 +55,9 @@ extension GetItInjectableX on _i174.GetIt {
     );
     gh.lazySingleton<_i461.NavigationService>(() => _i461.NavigationService());
     gh.lazySingleton<_i870.DioClient>(() => _i870.DioClient());
+    gh.factory<_i224.SettingsBloc>(
+      () => _i224.SettingsBloc(gh<_i460.SharedPreferences>()),
+    );
     gh.lazySingleton<_i700.AuthRepository>(
       () => _i212.AuthRepositoryImpl(gh<_i460.SharedPreferences>()),
     );
@@ -82,12 +85,6 @@ extension GetItInjectableX on _i174.GetIt {
     );
     gh.factory<_i10.UpdateProfileUsecase>(
       () => _i10.UpdateProfileUsecase(gh<_i69.ProfileRepository>()),
-    );
-    gh.factory<_i224.SettingsBloc>(
-      () => _i224.SettingsBloc(
-        gh<_i460.SharedPreferences>(),
-        gh<_i345.AppBloc>(),
-      ),
     );
     gh.factory<_i673.AuthBloc>(
       () => _i673.AuthBloc(

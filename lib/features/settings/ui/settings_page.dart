@@ -80,8 +80,6 @@ class SettingsPage extends StatelessWidget {
                 ),
                 onTap: () {
                   appBloc.add(LogoutRequested());
-                  appBloc.add(UserChanged(null));
-                  context.read<TodoBloc>().add(ClearTodoCache());
                 },
               ),
             ),

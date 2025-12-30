@@ -59,6 +59,16 @@ class TodoBloc extends Bloc<TodoEvent, TodoState> {
       _page++;
 
       _todos.addAll(result);
+
+      Set s = {};
+      for (var element in _todos) {
+        if (s.contains(element.title)) {
+          log("duplicate ${element.title}");
+        } else {
+          log(s.add(element.title).toString());
+        }
+      }
+
       emit(TodoLoaded(List.from(_todos), _hasMore));
     } catch (e, s) {
       log(e.toString(), stackTrace: s);

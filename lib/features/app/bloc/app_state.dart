@@ -19,10 +19,3 @@ class AppThemeChanged extends AppState {
   final ThemeMode mode;
   AppThemeChanged(this.mode);
 }
-
-class CacheClearedState extends AppState {}
-
-class ActiveUserChanged extends AppState {
-  final String? userId;
-  ActiveUserChanged(this.userId);
-}

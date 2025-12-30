@@ -1,6 +1,5 @@
 import 'package:axel/core/routes/app_routes.dart';
 import 'package:axel/features/Todo/bloc/todo_bloc.dart';
-import 'package:axel/features/app/bloc/app_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -37,139 +36,128 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
 
-    return BlocListener<AppBloc, AppState>(
-      listener: (context, state) {
-        if (state is CacheClearedState || state is ActiveUserChanged) {
-          context.read<TodoBloc>().add(ClearTodoCache());
-        }
-      },
-      child: Scaffold(
-        appBar: AppBar(
-          title: const Text('Todos'),
-          centerTitle: true,
-          actions: [
-            IconButton(
-              icon: const Icon(Icons.person_outline),
-              onPressed: () => Navigator.pushNamed(context, AppRoutes.profile),
-            ),
-            IconButton(
-              icon: const Icon(Icons.settings_outlined),
-              onPressed: () => Navigator.pushNamed(context, AppRoutes.settings),
-            ),
-          ],
-        ),
-        body: Column(
-          children: [
-            Padding(
-              padding: const EdgeInsets.fromLTRB(16, 12, 16, 8),
-              child: TextField(
-                decoration: InputDecoration(
-                  hintText: 'Search todos',
-                  prefixIcon: const Icon(Icons.search),
-                  filled: true,
-                  fillColor: theme.colorScheme.surfaceVariant,
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(14),
-                    borderSide: BorderSide.none,
-                  ),
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Todos'),
+        centerTitle: true,
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.person_outline),
+            onPressed: () => Navigator.pushNamed(context, AppRoutes.profile),
+          ),
+          IconButton(
+            icon: const Icon(Icons.settings_outlined),
+            onPressed: () => Navigator.pushNamed(context, AppRoutes.settings),
+          ),
+        ],
+      ),
+      body: Column(
+        children: [
+          Padding(
+            padding: const EdgeInsets.fromLTRB(16, 12, 16, 8),
+            child: TextField(
+              decoration: InputDecoration(
+                hintText: 'Search todos',
+                prefixIcon: const Icon(Icons.search),
+                filled: true,
+                fillColor: theme.colorScheme.surfaceContainerHighest,
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(14),
+                  borderSide: BorderSide.none,
                 ),
-                onChanged: (v) => context.read<TodoBloc>().add(SearchTodos(v)),
               ),
+              onChanged: (v) => context.read<TodoBloc>().add(SearchTodos(v)),
             ),
-            Expanded(
-              child: BlocBuilder<TodoBloc, TodoState>(
-                builder: (context, state) {
-                  if (state is TodoLoading) {
-                    return ListView.separated(
+          ),
+          Expanded(
+            child: BlocBuilder<TodoBloc, TodoState>(
+              builder: (context, state) {
+                if (state is TodoLoading) {
+                  return ListView.separated(
+                    padding: const EdgeInsets.all(16),
+                    itemCount: 6,
+                    separatorBuilder: (c, i) => const SizedBox(height: 12),
+                    itemBuilder: (c, i) => Container(
+                      height: 64,
+                      decoration: BoxDecoration(
+                        color: Colors.grey.shade300,
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                    ),
+                  );
+                }
+
+                if (state is TodoLoaded && state.todos.isEmpty) {
+                  return const Center(child: Text('No todos found'));
+                }
+
+                if (state is TodoLoaded) {
+                  return RefreshIndicator(
+                    onRefresh: () async {
+                      context.read<TodoBloc>().add(LoadTodos(refresh: true));
+                    },
+                    child: ListView.separated(
+                      controller: _scrollCtrl,
                       padding: const EdgeInsets.all(16),
-                      itemCount: 6,
-                      separatorBuilder: (_, __) => const SizedBox(height: 12),
-                      itemBuilder: (_, __) => Container(
-                        height: 64,
-                        decoration: BoxDecoration(
-                          color: Colors.grey.shade300,
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                      ),
-                    );
-                  }
-
-                  if (state is TodoLoaded && state.todos.isEmpty) {
-                    return const Center(child: Text('No todos found'));
-                  }
-
-                  if (state is TodoLoaded) {
-                    return RefreshIndicator(
-                      onRefresh: () async {
-                        context.read<TodoBloc>().add(LoadTodos(refresh: true));
-                      },
-                      child: ListView.separated(
-                        controller: _scrollCtrl,
-                        padding: const EdgeInsets.all(16),
-                        itemCount: state.hasMore
-                            ? state.todos.length + 1
-                            : state.todos.length,
-                        separatorBuilder: (_, __) => const SizedBox(height: 12),
-                        itemBuilder: (_, i) {
-                          if (i >= state.todos.length) {
-                            return const Padding(
-                              padding: EdgeInsets.symmetric(vertical: 16),
-                              child: Center(child: CircularProgressIndicator()),
-                            );
-                          }
-
-                          final todo = state.todos[i];
-
-                          return Card(
-                            elevation: 1,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(14),
-                            ),
-                            child: ListTile(
-                              contentPadding: const EdgeInsets.symmetric(
-                                horizontal: 16,
-                                vertical: 8,
-                              ),
-                              title: Text(
-                                todo.title,
-                                style: theme.textTheme.titleMedium,
-                              ),
-                              trailing: IconButton(
-                                icon: Icon(
-                                  todo.isFavorite
-                                      ? Icons.star_rounded
-                                      : Icons.star_border_rounded,
-                                  color: todo.isFavorite
-                                      ? Colors.amber
-                                      : Colors.grey,
-                                ),
-                                onPressed: () {
-                                  context.read<TodoBloc>().add(
-                                    ToggleTodoFavorite(todo.id),
-                                  );
-                                },
-                              ),
-                            ),
+                      itemCount: state.hasMore
+                          ? state.todos.length + 1
+                          : state.todos.length,
+                      separatorBuilder: (c, i) => const SizedBox(height: 12),
+                      itemBuilder: (_, i) {
+                        if (i >= state.todos.length) {
+                          return const Padding(
+                            padding: EdgeInsets.symmetric(vertical: 16),
+                            child: Center(child: CircularProgressIndicator()),
                           );
-                        },
-                      ),
-                    );
-                  }
+                        }
 
-                  if (state is TodoError) {
-                    return Center(child: Text(state.message));
-                  }
+                        final todo = state.todos[i];
 
-                  return const SizedBox();
-                },
-              ),
+                        return Card(
+                          elevation: 1,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(14),
+                          ),
+                          child: ListTile(
+                            contentPadding: const EdgeInsets.symmetric(
+                              horizontal: 16,
+                              vertical: 8,
+                            ),
+                            title: Text(
+                              todo.title,
+                              style: theme.textTheme.titleMedium,
+                            ),
+                            trailing: IconButton(
+                              icon: Icon(
+                                todo.isFavorite
+                                    ? Icons.star_rounded
+                                    : Icons.star_border_rounded,
+                                color: todo.isFavorite
+                                    ? Colors.amber
+                                    : Colors.grey,
+                              ),
+                              onPressed: () {
+                                context.read<TodoBloc>().add(
+                                  ToggleTodoFavorite(todo.id),
+                                );
+                              },
+                            ),
+                          ),
+                        );
+                      },
+                    ),
+                  );
+                }
+
+                if (state is TodoError) {
+                  return Center(child: Text(state.message));
+                }
+
+                return const SizedBox();
+              },
             ),
-          ],
-        ),
-        // floatingActionButton: FloatingActionButton(
-        //   onPressed: () => Navigator.pushNamed(context, AppRoutes.createTodo),
-        //   child: const Icon(Icons.add),
-        // ),
+          ),
+        ],
       ),
     );
   }

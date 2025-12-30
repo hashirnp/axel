@@ -1,0 +1,32 @@
+flavors:
+  production:
+    app:
+      name: "Production App"
+      icon: "assets/icons/production/production.png"       # custom icon
+    android:
+      applicationId: "com.np.app.production"
+      adaptiveIcon:                                     # optional
+        foreground: "assets/icons/production/production.png"
+        background: "assets/icons/production/production.png"
+    ios:
+      bundleId: "com.np.app.production"
+      icon: "assets/icons/production/production.png"   # optional iOS custom icon
+    macos:
+      bundleId: "com.np.app.production"
+      icon: "assets/icons/production/production.png"
+
+  staging:
+    app:
+      name: "Staging App"
+      icon: "assets/icons/staging/staging.jpg"
+    android:
+      applicationId: "com.np.app.staging"
+      adaptiveIcon:
+        foreground: "assets/icons/staging/staging.jpg"
+        background: "assets/icons/staging/staging.jpg"
+    ios:
+      bundleId: "com.np.app.staging"
+      icon: "assets/icons/staging/staging.jpg"
+    macos:
+      bundleId: "com.np.app.staging"
+      icon: "assets/icons/staging/staging.jpg"

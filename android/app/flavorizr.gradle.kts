@@ -9,12 +9,12 @@ android.apply {
         create("production") {
             dimension = "flavor-type"
             applicationId = "com.np.app.production"
-            resValue(type = "string", name = "app_name", value = "Production App")
+            resValue(type = "string", name = "app_name", value = "Todo")
         }
         create("staging") {
             dimension = "flavor-type"
             applicationId = "com.np.app.staging"
-            resValue(type = "string", name = "app_name", value = "Staging App")
+            resValue(type = "string", name = "app_name", value = "Todo STG")
         }
     }
 }

@@ -83,10 +83,10 @@ class AuthRepositoryImpl implements AuthRepository {
       final newAttempts = attempts + 1;
       await prefs.setInt(StringConstants.attemptKey, newAttempts);
 
-      // if (newAttempts >= 3) {
-      //   await prefs.setInt(lockKey, DateTime.now().millisecondsSinceEpoch);
-      //   throw Exception('Too many attempts. Account locked for 30 seconds');
-      // }
+      if (newAttempts >= 3) {
+        await prefs.setInt(lockKey, DateTime.now().millisecondsSinceEpoch);
+        throw Exception('Too many attempts. Account locked for 30 seconds');
+      }
 
       throw Exception('Invalid credentials');
     }
